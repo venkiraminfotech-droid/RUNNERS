@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Chennai Runners</title>
+<style>
+body{margin:0;background:#0D0D0D;color:white;font-family:Arial;}
+.header{background:linear-gradient(135deg,#FF6B35,#FF8C00);padding:30px;text-align:center;}
+h1{margin:0;font-size:32px;}
+.subtitle{opacity:0.8;margin-top:5px;}
+.connect-btn{display:block;width:250px;margin:20px auto;padding:15px;background:#FC4C02;color:white;text-align:center;border-radius:10px;text-decoration:none;font-size:18px;font-weight:bold;}
+.table{width:90%;margin:20px auto;border-collapse:collapse;}
+.table th{background:#FF6B35;padding:12px;text-align:left;}
+.table td{padding:12px;border-bottom:1px solid #333;}
+.table tr:hover{background:#1a1a1a;}
+.medal{font-size:24px;}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>🏃 Chennai Runners</h1>
+<p class="subtitle">Weekly Leaderboard</p>
+</div>
+<a class="connect-btn" href="/auth/strava">🔗 Connect Your Strava</a>
+<div id="data" style="text-align:center;padding:20px;color:#888;">
+Click Connect to see your runs!
+</div>
+<script>
+const token = new URLSearchParams(window.location.search).get('token');
+if(token){
+fetch('/activities/'+token)
+.then(r=>r.json())
+.then(data=>{
+let html='<table class="table"><tr><th>#</th><th>Run</th><th>Distance</th><th>Date</th></tr>';
+data.slice(0,20).forEach((r,i)=>{
+const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+html+=`<tr><td>${medal}${i+1}</td><td>${r.name}</td><td><b style="color:#FF6B35">${r.distance}</b></td><td>${r.date}</td></tr>`;
+});
+html+='</table>';
+document.getElementById('data').innerHTML=html;
+});
+}
+</script>
+</body>
+</html>
